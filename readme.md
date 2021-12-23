@@ -3,7 +3,7 @@
 A django email backend that saves the emails to database instead of sending them
 and can view the emails in a web-browser
 
-> disclaimer: do not use this in production or on any public server.
+> :warning: disclaimer: do not use this in production or on any public server.
 > this app hardly has any security protocols inplace since 
 > this is meant to be used in development and values ease of use over security. 
 > for example there is no password required to view a users inbox or to create a new one
