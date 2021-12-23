@@ -1,0 +1,65 @@
+{% extends 'developmentEmailDashboard/base.html' %}{% load static %}
+{% block title %}email dashboard | choose a inbox{% endblock %}
+
+{% block content %}
+<h1 class="center-align">choose a inbox</h1>
+
+
+<div class="container">
+  <div class="row">
+    <!--display inboxes-->
+    {% for inbox in inboxes %}
+      <div class="col s6 ">
+            <a class="" href="{{inbox.get_absolute_url}}">
+          <div class="card-panel white hoverable">
+              <span class="card-title black-text">{{inbox}}</span>
+              <!--display badge if there are unread emails-->
+              {% if inbox.get_unread_email_number %}
+              <span class="new badge red" data-badge-caption="unread">{{inbox.get_unread_email_number}}</span>
+              {% endif %}
+              <!--display badge if there are emails-->
+              {% if inbox.inboxemail__count %}
+              <span class="new badge blue" data-badge-caption="emails">{{inbox.inboxemail__count}}</span>
+              {% endif %}
+
+
+          </div>
+            </a>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!--button to open modal to create new inbox-->
+<div class="fixed-action-btn">
+  <a class="btn-floating btn-large red waves-effect waves-light modal-trigger" href="#new_inbox_modal">
+    <i class="large material-icons"><img src="{% static 'developmentEmailDashboard/add_black_24dp.svg' %}"></i>
+  </a>
+</div>
+
+<!--new_inbox_modal-->
+<div id="new_inbox_modal" class="modal">
+    <div class="modal-content">
+      <h4>New Inbox</h4>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="email" type="email" class="validate" onchange="update_inbox_button(event)">
+          <label for="email">Email address</label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+        <a id="create_button" class="waves-effect waves-green btn-flat">create</a>
+    </div>
+  </div>
+{% endblock %}
+
+{% block script %}
+<script>
+    <!--update link to new inbox when it is set-->
+    function update_inbox_button(event){
+        var create_button = document.getElementById('create_button');
+        create_button.href = `{% url 'developmentEmailDashboard:inboxes_view' %}create/${event.target.value}/`;
+    }
+</script>
+{% endblock %}

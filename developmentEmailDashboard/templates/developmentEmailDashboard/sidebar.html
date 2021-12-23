@@ -1,0 +1,45 @@
+{% load static %}
+<ul id="slide-out" class="sidenav sidenav-fixed">
+<!--heading for the inbox sidebar with nice backgroung and back button and delete inbox button-->
+    <li>
+        <div class="user-view">
+            <div class="background">
+                <img src="{% static 'developmentEmailDashboard/background.jpg' %}" style="background-size: 300px 100px;">
+
+            </div>
+            <span class="new badge blue" data-badge-caption="emails">{{emails.count}}</span>
+          <a href="{{inbox.get_absolute_url}}">
+              <img src="{% static 'developmentEmailDashboard/account_circle_black_24dp.svg' %}" width="80" height="80">
+
+          </a>
+
+          <a href="{{inbox.get_absolute_url}}"><span class="white-text name">{{inbox}}</span></a>
+            <br/>
+            <a href="{% url 'developmentEmailDashboard:inboxes_view' %}" class='white-text' style="position:absolute;top: 0px;left:8px;">back</a>
+            <a href="{% url 'developmentEmailDashboard:delete_inbox_view' inbox.email %}" class='red-text' style="position:absolute;top: 0px;right:8px;">delete</a>
+        </div>
+    </li>
+    <!--if there are emails in the inbox create a collection with all emails-->
+    {% if emails %}
+    <p class="center">inbox</p>
+    <div class="collection">
+        {% for email in emails %}
+             {% include 'developmentEmailDashboard/sidebarEmailPreview.html' %}
+        {% endfor %}
+    </div>
+    {% endif %}
+    <!--if inbox has sent emails and received emails add a divider between them-->
+    {% if sentEmails and emails %}
+        <hr />
+    {% endif %}
+    <!--if there are sent emails in the inbox create a collection with all sent emails-->
+    {% if sentEmails %}
+        <p class="center">sent</p>
+        <div class="collection">
+            {% for email in sentEmails %}
+                {% include 'developmentEmailDashboard/sidebarEmailPreview.html' %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</ul>

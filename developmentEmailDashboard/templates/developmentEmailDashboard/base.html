@@ -1,0 +1,38 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--title of each page-->
+    <title>{% block title %}email dashboard{% endblock %}</title>
+     <!-- Compiled and minified CSS for materializecss - https://materializecss.com -->
+    <link rel="stylesheet" href="{% static 'developmentEmailDashboard/materialize/materialize.min.css' %}">
+
+    <!-- Compiled and minified JavaScript for materializecss - https://materializecss.com-->
+    <script src="{% static 'developmentEmailDashboard/materialize/materialize.min.js' %}"></script>
+
+</head>
+<body class="blue-grey lighten-3">
+<!--all extra css is placed here-->
+{% block css %}
+{% endblock %}
+<!--page content goes here-->
+{% block content %}
+{% endblock %}
+
+<!--extra scripts for each page go here-->
+{% block script %}
+
+{% endblock %}
+<script>
+    <!--add materialize toast for each message created with django.contrib.messages-->
+    {% if messages %}
+        {% for message in messages %}
+            M.toast({html: `{{ message | safe}}`})
+        {% endfor %}
+    {% endif %}
+
+    <!--initialize materializecss javascript components https://materializecss.com/auto-init.html-->
+     M.AutoInit();
+</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+{% extends 'developmentEmailDashboard/base.html' %}
+{% load static %}
+{% block title %}email dashboard | {{inbox}}{% endblock %}
+
+{% block css %}
+<!--make room for the sidebar-->
+<style>
+#maincontent {
+    padding-left: 300px;
+}
+
+@media only screen and (max-width : 992px) {
+  #maincontent {
+    padding-left: 0;
+  }
+}
+</style>
+
+{% endblock %}
+
+{% block content %}
+<!--sidebar-->
+{% include 'developmentEmailDashboard/sidebar.html' %}
+
+<!--main content-->
+<div id="maincontent" style="overflow:hidden;max-height:100vh">
+    <iframe id='emailFrame' style="border:none;height:100vh;padding:0px;margin:0px;width:100%" title="description">
+    </iframe>
+</div>
+
+<div class="fixed-action-btn">
+    <a class="btn-floating btn-large red waves-effect waves-light modal-trigger" href="#send_email_modal">
+        <i class="large material-icons">
+            <img src="{% static 'developmentEmailDashboard/mode_edit_black_24dp.svg' %}">
+        </i>
+    </a>
+    <div id="send_email_modal" class="modal">
+        <form method="post" action="{% url 'developmentEmailDashboard:send_email_view' inbox.email %}" onsubmit="setTo(event)">
+            {% csrf_token %}
+            <div class="modal-content">
+                <h4>Compose email</h4>
+
+                <div class="row">
+
+                  <div class="input-field col s12">
+                      <div class="chips chips-initial" id="to_chips">
+                      </div>
+                      <label for="to_chips">To</label>
+                      <input type="hidden" name="to" id="to" required/>
+                  </div>
+                  <div class="input-field col s12">
+                    <input id="input_text" type="text" name="subject" required>
+                    <label for="input_text">Subject</label>
+                  </div>
+                </div>
+                <div class="input-field col s12">
+                   <textarea id="textarea2" class="materialize-textarea" name="content" required></textarea>
+                   <label for="textarea2">Message</label>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="submit" class="waves-effect waves-green btn-flat">Send</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+    <!--changes the email url when a link gets clicked on the sidebar-->
+    function loadEmail(url){
+        var emailFrame = document.getElementById('emailFrame');
+        emailFrame.setAttribute('src', url);
+    }
+
+    <!--on a new email form set the to hidden field to the 'to' chips json data-->
+    function setTo(event){
+        var elem = document.getElementById('to_chips');
+        var instance = M.Chips.getInstance(elem);
+        if(instance.chipsData.length<1){
+            event.preventDefault()
+            alert("must have at least one email address");
+        }
+
+        var to = document.getElementById('to');
+        to.value = JSON.stringify(instance.chipsData);
+    }
+</script>
+{% endblock %}

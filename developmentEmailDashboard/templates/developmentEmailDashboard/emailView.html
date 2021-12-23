@@ -1,0 +1,133 @@
+{% extends 'developmentEmailDashboard/base.html' %}
+<!--set title-->
+{% block title %}email dashboard | {{email}}{% endblock %}
+
+{% block content %}
+<!--add spacing on top of the email-->
+<br/>
+
+<!--email white background-->
+<div class="white" style="margin-top:30px;margin-left:150px;margin-right:150px;padding:50px;border-radius:15px;">
+    <div class="row">
+      <div class="col s6">
+          <!--materializecss chip for from address-->
+          from: <div class="chip">{{email.email.from_email}}</div>
+            <br/>
+            <!--if there is a to address show a chip for each address-->
+            {% if email.email.to %}
+                to: {% for address in email.email.to %} <div class="chip">{{address}}</div> {% endfor %}
+                <br/>
+            {% endif %}
+
+            <!--if there is a bcc address if current inbox is in bcc show inboxes email address-->
+            {% if email.email.bcc %}
+
+                {% for address in email.email.bcc %}
+                    {% if address == inbox.email.email %}
+                        bcc: ...<div class="chip">{{address}}</div><br/>
+                    {% endif %}
+                {% endfor %}
+
+            {% endif %}
+
+            <!--if there is a cc address show a chip for each address-->
+            {% if email.email.cc %}
+                cc: {% for address in email.email.cc %} <div class="chip">{{address}}</div>{% endfor %}
+                <br/>
+            {% endif %}
+      </div>
+        <!-- show on the other side when the email was sent-->
+      <div class="col s6">
+          <p class="right grey-text">
+              {{email.email.created}} - {{email.email.created|timesince}} ago
+          </p>
+
+      </div>
+    </div>
+
+    <hr/>
+    <!--subject-->
+    <h5>{{email.email.subject}}</h5>
+    <br/>
+    <!--show all the email content-->
+    <div class="flow-text">{{email.email.body|safe}}</div>
+    <br/>
+    <br/>
+
+    <!--show all email buttons to reply and delete-->
+    <form method="post" action="{% url 'developmentEmailDashboard:delete_email' inbox.email email.id %}" target="_top">
+        {% csrf_token %}
+        <button data-target="modal1" class="btn modal-trigger">Reply</button>
+        <button type="submit" class="btn red lighten-1">Delete</button>
+    </form>
+
+
+      <div id="modal1" class="modal">
+          <form method="post" onsubmit="setReplyTo(event)" action="{% url 'developmentEmailDashboard:reply_view' inbox.email email.id %}">
+            {% csrf_token %}
+            <div class="modal-content">
+
+              <div class="row">
+                  <div class="col s6 ">from:
+                      <div class="input-field col s12">
+                        <!--let the user choose which inbox to use-->
+                        <select name="from_address">
+                            {% for email in inboxes %}
+                                <option value="{{email.email}}" {% if inbox.email == email.email %}selected{% endif %}>{{email.email}}</option>
+                            {% endfor %}
+                        </select>
+                      </div>
+                  </div>
+                  <!--reply to chips-->
+                  <div class="col s6">
+                      replying to:
+                      <div class="chips chips-initial" id="replying_to_chips">
+                        {% for email in email.email.reply_to %}
+                            <div class="chip">{{email}}</div>
+                        {% endfor %}
+                      </div>
+                      <input type="hidden" name="reply_to" id="reply_to" />
+                  </div>
+              </div>
+              <p>subject: {{email.email.subject}}</p>
+              <div class="row">
+                <div class="input-field col s12">
+                <textarea id="emailcontent" class="materialize-textarea" data-length="120" name="content"></textarea>
+                <label for="emailcontent">Content</label>
+              </div>
+            </div>
+            </div>
+            <div class="modal-footer">
+              <button type='submit' class="waves-effect waves-green btn-flat">Send</button>
+            </div>
+          </form>
+      </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block script %}
+<script>
+    <!--initialize the chips-->
+    document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('.chips');
+        var instances = M.Chips.init(elems, {limit: 10});
+    });
+
+    <!--when a form is submitted convert chips to json and set reply to hidden field -->
+    function setReplyTo(event){
+        var elem = document.getElementById('replying_to_chips');
+        var instance = M.Chips.getInstance(elem);
+        <!-- if there is no reply chip don't submit form-->
+        if(instance.chipsData.length<1){
+            event.preventDefault()
+            alert("must reply to at least one email address");
+        }
+
+        var reply_to = document.getElementById('reply_to');
+        reply_to.value = JSON.stringify(instance.chipsData);
+    }
+</script>
+{% endblock %}

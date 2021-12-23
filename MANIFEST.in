@@ -1,0 +1,5 @@
+include LICENSE
+include README.md
+recursive-include developmentEmailDashboard/templates *
+recursive-include developmentEmailDashboard/migrations *
+recursive-include developmentEmailDashboard/static *

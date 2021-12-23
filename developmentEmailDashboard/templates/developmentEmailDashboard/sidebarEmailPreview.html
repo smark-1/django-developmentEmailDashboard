@@ -1,0 +1,9 @@
+{% load static %}
+<a class="collection-item avatar" onclick="loadEmail('{% url 'developmentEmailDashboard:email_view' inbox.email email.id %}')">
+  <i class="circle">
+      <img src="{% static 'developmentEmailDashboard/person_black_24dp.svg' %}" width="30" height="40">
+  </i>
+  <span class="title truncate " style="{% if not email.read %}font-weight:700;{% endif %}">{{email.email.subject}}</span>
+  <p>{{email.email.from_email}}</p>
+  <p class="truncate">{{email.email.body}}</p>
+</a>
