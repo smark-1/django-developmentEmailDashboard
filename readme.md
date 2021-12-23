@@ -1,4 +1,4 @@
-# django-betterFlatPages
+# django-developmentEmailDashboard
 
 A django email backend that saves the emails to database instead of sending them
 and can view the emails in a web-browser
