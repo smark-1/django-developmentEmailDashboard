@@ -50,7 +50,15 @@
     <h5>{{email.email.subject}}</h5>
     <br/>
     <!--show all the email content-->
-    <div class="flow-text">{{email.email.body|safe}}</div>
+    {% if email.email.email_type == 'text' or email.email.email_type == 'text/plain' or email.email.email_type == 'plain' %}
+        <!--display text based email-->
+        <div style="white-space: pre;">{{email.email.body}}</div>
+    {% else %}
+        <!--display html based email-->
+        <div>{{email.email.body|safe}}</div>
+    {% endif %}
+
+
     <br/>
     <br/>
 

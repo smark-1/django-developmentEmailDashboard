@@ -35,6 +35,7 @@ class DevelopmentEmail(models.Model):
     bcc = models.JSONField()
     cc = models.JSONField()
     reply_to = models.JSONField()
+    email_type = models.CharField(max_length=20)
 
     created = models.DateTimeField(auto_now_add=True)
 
