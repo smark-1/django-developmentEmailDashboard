@@ -54,6 +54,12 @@ fixed bug where text based emails don't display new lines properly
 
 fixed bug where deleting inbox creates does not exist error
 
+### 2.0.1
+fixed bug where when zroya init fails to send email notification it raises 500 error now ignores it
+
+### 2.0.2
+when zroya init fails to load still tries to send notification
+
 ## still left to do
 * amazing documentation
 * 100% testing coverage

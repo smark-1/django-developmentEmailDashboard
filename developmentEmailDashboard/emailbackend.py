@@ -53,9 +53,13 @@ def send_notification(email, inbox):
     try:
         import zroya
 
-        # send notification
-        zroya.init("django-developmentEmailDashboard", "dragoncommits",
-                   'django-developmentEmailDashboard', 'django-developmentEmailDashboard', '1')
+        try:
+            # send notification
+            zroya.init("django-developmentEmailDashboard", "dragoncommits",
+                       'django-developmentEmailDashboard', 'django-developmentEmailDashboard', '1')
+        except Exception:
+            pass
+
         t = zroya.Template(zroya.TemplateType.Text2)
 
         t.setFirstLine(f'"{inbox.email}" received a new email')
@@ -66,3 +70,5 @@ def send_notification(email, inbox):
     except ModuleNotFoundError:
         print(
             'to show notifications about receiving emails you must install zroya first install zroya | pip install zroya')
+    except Exception:
+        pass
