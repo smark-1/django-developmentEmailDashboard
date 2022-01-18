@@ -69,5 +69,6 @@ when zroya init fails to load still tries to send notification
 * add email attachments
 * allow browser to send html emails not just view emails with html sent by websites
 * management command to delete database tables, clear tables, create tables again
+* add django debug toolbar panel
 
 > Any contribution is welcome just make a pull request, and I will try to add your feature in the next version as soon as possible.
